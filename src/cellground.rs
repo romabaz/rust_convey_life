@@ -32,9 +32,9 @@ impl Cellground {
 
     pub fn clear_cells(&mut self) {
         let mut cells = Vec::with_capacity(self.rows);
-            for _ in 0..self.rows {
-                cells.push(vec![false; self.columns]);
-            }
+        for _ in 0..self.rows {
+            cells.push(vec![false; self.columns]);
+        }
         self.cells = cells;
         self.next_cells = self.cells.clone();
     }
