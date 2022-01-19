@@ -7,15 +7,17 @@ use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use sdl2::mouse::MouseButton;
 use std::time::Duration;
+use names::Generator;
 use sdl2::rect::{Point};
 use cellground::{Cellground, Renderable};
+use crate::cellground::Savable;
 
 pub fn main() {
     let sdl_context = sdl2::init().unwrap();
     let video_subsystem = sdl_context.video().unwrap();
 
     const CANVAS_WIDTH: i32 = 800;
-    const CANVAS_HEIGHT: i32 = 600;
+    const CANVAS_HEIGHT: i32 = 800;
     let window = video_subsystem.window("Convey's Game of Life", CANVAS_WIDTH as u32, CANVAS_HEIGHT as u32)
         .position_centered()
         .build()
@@ -64,6 +66,9 @@ pub fn main() {
                 Event::KeyDown { keycode: Some(Keycode::N), .. } => {
                     cellground.next_gen();
                 },
+                Event::KeyDown { keycode: Some(Keycode::S), ..} => {
+                    cellground.save_field(&(Generator::default().next().unwrap()));
+                }
                 _ => {}
             }
         }

@@ -2,6 +2,8 @@ use std::vec::Vec;
 use sdl2::render::WindowCanvas;
 use sdl2::rect::{Rect};
 use sdl2::pixels::Color;
+use std::fs::File;
+use std::io::Write;
 
 pub struct Cellground {
     cells: Vec<Vec<bool>>,
@@ -27,6 +29,7 @@ impl Cellground {
     }
 
     pub fn set_cell(&mut self, row: usize, column: usize) {
+        self.next_cells[row][column] = !self.cells[row][column];
         self.cells[row][column] = !self.cells[row][column];
     }
 
@@ -47,10 +50,8 @@ impl Cellground {
                     if self.get_neighbours_cnt(x, y) < 2 || self.get_neighbours_cnt(x, y) > 3 {
                         self.next_cells[y][x] = false;
                     }
-                } else {
-                    if self.get_neighbours_cnt(x, y) == 3 {
-                        self.next_cells[y][x] = true;
-                    }
+                } else if self.get_neighbours_cnt(x, y) == 3 {
+                    self.next_cells[y][x] = true;
                 }
             }
         }
@@ -137,6 +138,25 @@ impl Cellground {
 
 pub trait Renderable {
     fn render_thing(&self, _: &mut WindowCanvas);
+}
+
+pub trait Savable {
+    fn save_field(&self, path: &str);
+}
+
+//todo: change implementation to save coords of alive cells only
+impl Savable for Cellground {
+    fn save_field(&self, path: &str) {
+        let mut f = File::create(path).expect("Failed to create a file");
+        for x in self.cells.iter() {
+            f.write_all(
+                x.iter()
+                    .map(|&item| item as u8)
+                    .collect::<Vec<u8>>()
+                    .as_slice())
+                .expect("Failed to write");
+        }
+    }
 }
 
 impl Renderable for Cellground {
