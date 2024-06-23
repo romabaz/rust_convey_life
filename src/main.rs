@@ -16,8 +16,8 @@ pub fn main() {
     let sdl_context = sdl2::init().unwrap();
     let video_subsystem = sdl_context.video().unwrap();
 
-    const CANVAS_WIDTH: i32 = 800;
-    const CANVAS_HEIGHT: i32 = 800;
+    const CANVAS_WIDTH: i32 = 1800;
+    const CANVAS_HEIGHT: i32 = 950;
     let window = video_subsystem.window("Convey's Game of Life", CANVAS_WIDTH as u32, CANVAS_HEIGHT as u32)
         .position_centered()
         .build()
@@ -60,10 +60,13 @@ pub fn main() {
                 Event::MouseButtonDown { mouse_btn: MouseButton::Left, x, y, .. } => {
                     cellground.set_cell(y as usize / 10, x as usize / 10);
                 },
-                Event::KeyDown { keycode: Some(Keycode::Space), .. } => {
+                Event::KeyDown { keycode: Some(Keycode::Return), .. } => {
                      cellground.clear_cells();
                 },
                 Event::KeyDown { keycode: Some(Keycode::N), .. } => {
+                    cellground.next_gen();
+                },
+                Event::KeyDown { keycode: Some(Keycode::Space), .. } => {
                     cellground.next_gen();
                 },
                 Event::KeyDown { keycode: Some(Keycode::S), ..} => {
